@@ -324,8 +324,7 @@
     const subject = 'Đơn hàng mới - Phở Gà Quán';
     const EMAIL_TO = 'vudo805@gmail.com';
     const mailto = `mailto:${encodeURIComponent(EMAIL_TO)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-    try{localStorage.removeItem('cart_phoga');localStorage.removeItem('cart');}catch{}
-  window.location.href = mailto;
+    window.location.href = mailto;
   };
 
   // Gọi khi DOM sẵn sàng (phòng khi script không chạy vì lý do thứ tự)
