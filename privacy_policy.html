@@ -1,42 +1,151 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Chính sách & Quyền riêng tư – Phở Gà Quán</title>
-  <meta name="description" content="Chính sách bảo mật & điều khoản sử dụng của Phở Gà Quán." />
-  <style>
-    :root{
-      --bg:#0b0f14; --panel:#0f172a; --text:#e5e7eb; --muted:#9aa0a6;
-      --border:#1f2937; --brand:#10b981; --brand-2:#14b8a6;
-    }
-    *{box-sizing:border-box}
-    body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
-    a{color:var(--brand)}
-    .wrap{max-width:900px;margin:0 auto;padding:28px 16px}
-    header{position:sticky;top:0;background:linear-gradient(180deg,var(--bg),rgba(11,15,20,.9));backdrop-filter:blur(8px);border-bottom:1px solid var(--border)}
-    h1{font-size:32px;margin:10px 0 6px}
-    .lead{color:var(--muted);margin:0 0 14px}
-    .card{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:16px;margin:12px 0;box-shadow:0 8px 24px rgba(0,0,0,.24)}
-    h2{font-size:20px;margin:0 0 8px}
-    ul{padding-left:18px;margin:8px 0}
-    li{margin:6px 0}
-    .kbd{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;color:var(--muted)}
-    .back{display:inline-flex;gap:8px;align-items:center;text-decoration:none;border:1px solid var(--border);padding:8px 12px;border-radius:10px}
-    footer{color:var(--muted);border-top:1px solid var(--border);margin-top:40px;padding:18px 0;font-size:14px}
-    .pill{display:inline-block;background:rgba(20,184,166,.12);border:1px solid rgba(20,184,166,.35);padding:2px 8px;border-radius:999px;font-size:12px;color:#80fff1;margin-left:6px}
-  </style>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Phở Gà Quán</title>
+<meta name="description" content="Phở Gà Quán – Đậm đà hương vị Việt. Đặt món nhanh, giỏ hàng tiện lợi, giao hàng tại Munich." />
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap" rel="stylesheet" />
+<meta property="og:title" content="Phở Gà Quán" />
+<meta property="og:description" content="Đậm đà hương vị Việt – đặt món trực tuyến." />
+<meta property="og:type" content="website" />
+<meta property="og:image" content="images/banner.jpg" />
+<meta name="theme-color" content="#121212" />
+
+<style>
+  :root{--bg:#121212;--card:#1e1e1e;--txt:#eaeaea;--muted:#9aa0a6;--accent:#facc15;--radius:14px}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:var(--bg);color:var(--txt)}
+  a:focus-visible, button:focus-visible, .tab:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+  /* Hero */
+  .hero{position:relative;height:260px;overflow:hidden;margin-bottom:16px}
+  .hero img{width:100%;height:100%;object-fit:cover}
+  .hero::after{content:"";position:absolute;inset:0;background:rgba(0,0,0,.55)}
+  .hero-content{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;z-index:1}
+  .title{font-family:'Dancing Script',cursive;font-weight:700;font-size:80px;margin:0 0 12px;color:var(--accent);text-shadow:0 4px 10px rgba(0,0,0,.7)}
+  @media(max-width:600px){.title{font-size:48px}}
+  .tagline{font-size:18px;color:#f3f4f6;font-style:italic}
+  .wrap{max-width:980px;margin:0 auto 100px;padding:0 16px}
+
+  /* Tabs */
+
+  /* Fly-to-cart image */
+
+.addBtn.flash {
+  background-color: #22c55e !important;
+  color: #fff !important;
+  box-shadow: 0 0 10px rgba(34,197,94,0.8);
+  transition: all 0.3s;
+}
+
+  .fly-img{
+    position:fixed;
+    z-index:9999;
+    pointer-events:none;
+    border-radius:10px;
+    box-shadow:0 8px 30px rgba(0,0,0,.35);
+    transform-origin:center center;
+  }
+
+  /* Category Bar */
+  .catbar{position:sticky;top:0;z-index:10;display:flex;gap:10px;overflow-x:auto;padding:8px;background:#0b0b0b;border:1px solid #1f2937;border-radius:12px;margin:12px 0}
+  .catlink{flex:1;display:inline-block;padding:10px 14px;border-radius:12px;border:1px solid #334155;background:#171717;color:#e5e7eb;font-weight:700;cursor:pointer;white-space:nowrap}
+  .catlink.active{background:#10b981;border-color:#0ea5a3;color:#062c2c}
+  .catTitle{font-size:22px;font-weight:800;margin:24px 6px 8px;color:#e5e7eb}
+
+  .tabs{position:sticky;top:0;z-index:5;background:#121212d9;backdrop-filter:blur(6px);border:1px solid #242424;border-radius:12px;padding:6px;display:flex;gap:6px;margin:12px 0;overflow-x:auto}
+  .tab{flex:1;text-align:center;padding:10px 12px;border-radius:10px;cursor:pointer;user-select:none;border:1px solid transparent;color:#e5e7eb;white-space:nowrap}
+  .tab.active{background:#0f172a;border-color:#253047}
+
+  /* Cards */
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;margin-top:10px}
+  .card{background:var(--card);border-radius:var(--radius);overflow:hidden}
+  .thumb{width:100%;height:160px;object-fit:cover;background:#0a0a0a}
+  .pad{padding:14px}
+  .name{font-weight:700;margin:0 0 10px}
+  .row{display:flex;align-items:center;justify-content:space-between;gap:10px}
+  .price{font-weight:700}
+  button{background:#2d2d2d;color:#fff;border:0;padding:8px 12px;border-radius:999px;cursor:pointer}
+  button.adding{background:#22c55e!important}
+
+  /* Cart trigger */
+  .float-cart{position:fixed;right:16px;bottom:16px;z-index:50;background:#10b981;color:#000;border:0;padding:12px 16px;border-radius:999px;font-weight:700}
+
+  /* Drawer + overlay */
+  .overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);display:none;z-index:60}
+  .overlay.show{display:block}
+  .drawer{position:fixed;top:0;right:-540px;width:540px;max-width:92vw;height:100vh;background:#0f172a;color:#e5e7eb;z-index:70;transition:right .3s ease;display:flex;flex-direction:column}
+  .drawer.open{right:0}
+  .drawer header{padding:14px 16px;border-bottom:1px solid #1f2937;display:flex;align-items:center;justify-content:space-between;gap:8px}
+  .drawer .content{padding:12px;overflow:auto;flex:1;padding-bottom:180px}
+  .actions{display:flex;gap:8px;align-items:center}
+  .btn{background:#253047;color:#e5e7eb;border:1px solid #334155;padding:8px 12px;border-radius:10px;cursor:pointer}
+  .btn.danger{background:#7f1d1d;border-color:#991b1b}
+  .btn.primary{background:#10b981;border-color:#0ea5a3;color:#062c2c;font-weight:700}
+
+  /* Cart item */
+  .cItem{display:grid;grid-template-columns:80px 1fr auto auto auto;align-items:flex-start;gap:10px;padding:10px 8px;border-bottom:1px dashed #1f2937}
+  .cItem img{width:80px;height:80px;object-fit:cover;border-radius:10px}
+  .qty{display:flex;align-items:center;gap:6px}
+  .qty input{width:64px;padding:6px 8px;background:#0b1220;color:#fff;border:1px solid #253047;border-radius:8px;text-align:center}
+
+  /* Total box fixed bottom */
+  .totalBox{position:fixed;right:-540px;width:540px;max-width:92vw;bottom:0;z-index:75;background:#0b1220;border-top:1px solid #1f2937;padding:12px}
+  .totalRow{display:flex;align-items:center;justify-content:space-between;margin:6px 0}
+  .totalBox.open{right:0}
+
+  .totalBox label{display:block;font-size:14px;color:#9aa0a6;margin-top:8px}
+  .totalBox textarea{width:100%;min-height:68px;resize:vertical;background:#0b1220;color:#e5e7eb;border:1px solid #253047;border-radius:8px;padding:8px;margin-top:6px}
+
+  .empty{padding:16px;text-align:center;color:#9aa0a6}
+  .chip{position:fixed;z-index:80;background:#10b981;color:#000;padding:6px 10px;border-radius:999px;font-weight:700;font-size:12px;pointer-events:none;box-shadow:0 6px 18px rgba(0,0,0,.35)}
+
+  /* Footer */
+  .site-footer{background:#171717;color:#e5e5e5;margin-top:48px}
+  .site-footer .inner{max-width:980px;margin:0 auto;padding:36px 16px 20px}
+  .footer-grid{display:grid;grid-template-columns:1.2fr 1fr;gap:18px}
+  .footer-col h4{margin:0 0 10px}
+  .footer-list{margin:0;padding:0;list-style:none}
+  .footer-list li{margin:8px 0}
+  .footer-list a{color:#cbd5e1;text-decoration:none}
+  .footer-list a:hover{color:#ffffff}
+  .footer-note{border-top:1px solid #242424;margin-top:24px;padding-top:16px;font-size:14px;color:#9aa0a6;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+  .brand-mark{color:inherit;font-weight:700}
+
+  @media(prefers-reduced-motion:reduce){
+    *{scroll-behavior:auto!important}
+    .drawer{transition:none}
+  }
+
+main ul {
+  list-style: none;
+  padding-left: 0;
+}
+main ul li {
+  margin-left: 0;
+}
+
+</style>
 </head>
 <body>
-  <header>
-    <div class="wrap">
-      <a class="back" href="index.html" aria-label="Về trang chủ">← Về trang chủ</a>
-      <h1>Chính sách & Quyền riêng tư <span class="pill">Cập nhật: 25.08.2025</span></h1>
-      <p class="lead">Tài liệu này mô tả cách Phở Gà Quán xử lý dữ liệu cá nhân và các điều khoản khi đặt hàng trên websitesite.</p>
+  <!-- Banner -->
+  <div class="hero" aria-label="Ảnh bìa quán">
+    <img src="images/banner.jpg" alt="Phở Gà Quán" onerror="this.src='images/placeholder.jpg'" width="1600" height="320" />
+    <div class="hero-content" aria-hidden="true">
+      <h1 class="title">Phở Gà Quán</h1>
+      <p class="tagline">Đậm đà hương vị Việt</p>
     </div>
-  </header>
+  </div>
+    <div class="totalRow"><span></div>
+        <div class="totalRow" style="font-size:18px"><span></button>
+    </div>
+  </div>
 
-  <main class="wrap">
+<main class="wrap">
+  <h1 style="margin:10px 0 6px">Chính sách & Quyền riêng tư</h1>
     <section class="card">
       <h2>Tóm tắt nhanh</h2>
       <ul>
@@ -52,7 +161,7 @@
       <p><strong>Phở Gà Quán</strong><br>
       Munich, Germany<br>
       Điện thoại: +49 (0) 159-06380849<br>
-      Email: <a href="mailto:vudo805@gmail.com">vudo805@gmail.com</a></p>
+      Email: vudo805@gmail.com</p>
     </section>
 
     <section class="card">
@@ -101,7 +210,7 @@
       <h2>7) Quyền của bạn (GDPR)</h2>
       <ul>
         <li>Quyền được biết & truy cập dữ liệu (Art. 15), quyền sửa (Art. 16), xoá (Art. 17), hạn chế xử lý (Art. 18), di chuyển dữ liệu (Art. 20), phản đối (Art. 21).</li>
-        <li>Muốn thực hiện các quyền trên, vui lòng liên hệ qua <a href="mailto:vudo805@gmail.com">email</a> hoặc số điện thoại ở trên.</li>
+        <li>Muốn thực hiện các quyền trên, vui lòng liên hệ qua email hoặc số điện thoại ở trên.</li>
       </ul>
     </section>
 
@@ -118,7 +227,7 @@
 
     <section class="card">
       <h2>9) Thay đổi tài liệu này</h2>
-      <p>M sẽ cập nhật tài liệu khi có thay đổi quy trình. Phiên bản mới sẽ ghi ngày cập nhật ở đầu trang.</p>
+      <p>Phở Gà Quán sẽ cập nhật tài liệu khi có thay đổi quy trình. Phiên bản mới sẽ ghi ngày cập nhật ở đầu trang.</p>
     </section>
 
     <section class="card">
@@ -127,8 +236,49 @@
     </section>
   </main>
 
-  <footer>
-    <div class="wrap">© 2025 Phở Gà Quán — All rights reserved.</div>
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="inner">
+      <div class="footer-grid">
+        <div class="footer-col">
+          <h4>Thông tin liên hệ</h4>
+          <ul class="footer-list">
+            
+            <li>📍 <strong>Địa chỉ:</strong>
+              <a href="https://www.google.com/maps?q=Connollystr.+3,+80809+Munich" target="_blank" rel="noopener noreferrer">
+                Connollystr. 3, 80809 Munich
+              </a>
+            </li>
+            <li>📞 <strong>Điện thoại:</strong> <a href="tel:+4915906380849">+49 (0) 159-06380849</a></li>
+            <li>✉️ <strong>Email:</strong> vudo805@gmail.com</li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Liên kết nhanh</h4>
+          <ul class="footer-list">
+            <li><a href="#khai-vi">Menu</a></li>
+            <li><a href="#" onclick="document.getElementById('openCartBtn').click();return false;">Giỏ hàng</a></li>
+            <li><a id="privacyLink" href="privacy_policy.html" target="_self" rel="noopener" onclick="window.location.href='privacy_policy.html'; return false;">Chính sách &amp; Quyền riêng tư</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-note">
+        <div>© <span class="brand-mark">Phở Gà Quán</span></div>
+        <div>Munich, Germany</div>
+      </div>
+    </div>
   </footer>
+
+<script>
+(function(){
+  const a = document.getElementById('privacyLink');
+  if(!a) return;
+  a.addEventListener('click', function(e){
+    try{ e.preventDefault(); }catch(_){}
+    window.location.assign('privacy_policy.html');
+  });
+})();
+</script>
+
 </body>
 </html>
