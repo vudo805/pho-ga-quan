@@ -293,46 +293,159 @@
   document.getElementById('backBtn').onclick = () => { window.location.href = 'index.html#checkout'; };
 
   // Gửi qua email (CRLF cho mobile)
-  document.getElementById('submitBtn').onclick = () => {
-    const cart = loadCart();
-    if(!cart.length){ alert('Giỏ hàng đang trống.'); return; }
-    const customer = {
-      fullName: document.getElementById('fullName').value.trim(),
-      phone: document.getElementById('phone').value.trim(),
-      email: document.getElementById('email').value.trim(),
-      note: document.getElementById('note').value.trim(),
-    };
-    if(!customer.fullName){ alert('Vui lòng nhập họ tên.'); return; }
-    try{ localStorage.setItem('customer_phoga', JSON.stringify(customer)); }catch{}
+  // removed legacy mailto handler
 
-    const t = totals(cart);
-    const lines = cart.map(x=>`- ${x.name} x${x.qty} = ${VND.format(x.price*x.qty)}`).join('\r\n');
-    const body = [
-      'Xin chào Phở Gà Quán,','',
-      'Mình muốn đặt:','',lines,'',
-      `Tạm tính: ${VND.format(t.subtotal)}`,
-      `Phí giao: ${VND.format(t.ship)}`,
-      `Tổng cộng: ${VND.format(t.grand)}`,'',
-      'Thông tin giao hàng:',
-      `Họ tên: ${customer.fullName}`,
-      `SĐT: ${customer.phone}`,
-      `Email: ${customer.email||''}`,
-      `Ghi chú: ${customer.note||''}`,'',
-      'Gửi từ website.'
-    ].join('\r\n');
+</script>
 
-    const subject = 'Đơn hàng mới - Phở Gà Quán';
-    const EMAIL_TO = 'vudo805@gmail.com';
-    const mailto = `mailto:${encodeURIComponent(EMAIL_TO)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-    window.location.href = mailto;
-  };
+<!-- === UNIVERSAL CART RENDER PATCH (auto-detect host & cart format) === -->
+<script>
+(function(){
+  const VND = new Intl.NumberFormat('vi-VN',{style:'currency',currency:'VND',maximumFractionDigits:0});
 
-  // Gọi khi DOM sẵn sàng (phòng khi script không chạy vì lý do thứ tự)
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', renderSummary);
-  } else {
-    renderSummary();
+  function findSummaryHost(){
+    let el = document.getElementById('summary')
+          || document.getElementById('summaryList')
+          || document.querySelector('[data-summary], .summary, #summaryItems');
+    if (el) return el;
+    const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, null);
+    let node;
+    while(node = walker.nextNode()){
+      if((node.nodeValue||'').trim().toLowerCase().includes('đang tải giỏ hàng')){
+        return node.parentElement.closest('div,section,article') || node.parentElement;
+      }
+    }
+    const host = document.createElement('div');
+    host.id = 'summary';
+    const main = document.querySelector('main') || document.body;
+    main.appendChild(host);
+    return host;
   }
-  </script>
+
+  function loadCart(){
+    const keys = ['cart_phoga','cart','cartItems'];
+    for (const k of keys){
+      try{
+        const raw = localStorage.getItem(k);
+        if (raw && raw !== '[]' && raw !== 'null'){
+          const arr = JSON.parse(raw);
+          if (Array.isArray(arr)) return arr;
+        }
+      }catch(e){}
+    }
+    return [];
+  }
+
+  function normalize(items){
+    return items.map(x=>{
+      const name = x.name ?? x.title ?? 'Món';
+      const price = Number(x.price ?? x.unitPrice ?? 0);
+      const qty = Number(x.qty ?? x.quantity ?? x.count ?? 1);
+      return {name, price, qty};
+    }).filter(x=>x.qty>0);
+  }
+
+  function totals(items){
+    const subtotal = items.reduce((s,i)=> s + i.price*i.qty, 0);
+    const ship = subtotal >= 200000 ? 0 : 15000;
+    return {subtotal, ship, grand: subtotal + ship};
+  }
+
+  function render(){
+    const host = findSummaryHost();
+    const raw = loadCart();
+    const items = normalize(raw);
+    host.innerHTML = '';
+
+    if (!items.length){
+      host.innerHTML = '<p class="muted">Giỏ hàng trống…</p>';
+      return;
+    }
+
+    const t = totals(items);
+    const list = items.map(i=>`
+      <div class="flex items-center justify-between py-1">
+        <span>${i.name} × ${i.qty}</span>
+        <strong>${VND.format(i.price*i.qty)}</strong>
+      </div>
+    `).join('');
+
+    host.innerHTML = `
+      <div class="space-y-1">${list}</div>
+      <hr style="border:none;border-top:1px dashed rgba(255,255,255,0.12);margin:10px 0">
+      <div class="flex items-center justify-between"><span>Tạm tính</span><span>${VND.format(t.subtotal)}</span></div>
+      <div class="flex items-center justify-between"><span>Phí giao</span><span>${VND.format(t.ship)}</span></div>
+      <div class="flex items-center justify-between" style="font-size:18px"><span><b>Tổng cộng</b></span><b>${VND.format(t.grand)}</b></div>
+    `;
+  }
+
+  document.addEventListener('DOMContentLoaded', render);
+})();
+</script>
+<!-- === END UNIVERSAL PATCH === -->
+
+
+<script>
+const ENDPOINT = "https://script.google.com/macros/s/AKfycbx2UKGC39wwLKrDmaIpJwdDzJVc2jl70aRHXiYTllj_5xB0ltCizaIvl0jD1PYR0zfJKA/exec";
+
+async function sendOrder(){
+  const cart = (localStorage.getItem('cart_phoga') && JSON.parse(localStorage.getItem('cart_phoga'))) ||
+               (localStorage.getItem('cart') && JSON.parse(localStorage.getItem('cart'))) || [];
+  if(!cart.length){ alert('Giỏ hàng đang trống.'); return; }
+
+  const fullName = document.getElementById('fullName').value.trim();
+  const phone    = document.getElementById('phone').value.trim();
+  const email    = document.getElementById('email').value.trim();
+  const note     = document.getElementById('note').value.trim();
+  if(!fullName){ alert('Vui lòng nhập họ tên.'); return; }
+
+  const VND = new Intl.NumberFormat('vi-VN',{style:'currency',currency:'VND',maximumFractionDigits:0});
+  const subtotal = cart.reduce((s,x)=> s + x.price*x.qty, 0);
+  const ship = subtotal >= 200000 ? 0 : 15000;
+  const grand = subtotal + ship;
+  const lines = cart.map(x=>`- ${x.name} x${x.qty} = ${VND.format(x.price*x.qty)}`).join('\n');
+  const body = [
+    'Xin chào Phở Gà Quán,','',
+    'Mình muốn đặt:','',lines,'',
+    `Tạm tính: ${VND.format(subtotal)}`,
+    `Phí giao: ${VND.format(ship)}`,
+    `Tổng cộng: ${VND.format(grand)}`,'',
+    'Thông tin giao hàng:',
+    `Họ tên: ${fullName}`,
+    `SĐT: ${phone}`,
+    `Email: ${email}`,
+    `Ghi chú: ${note}`,'',
+    'Gửi từ website.'
+  ].join('\n');
+
+  const btn = document.getElementById('submitBtn');
+  const oldText = btn.textContent; btn.disabled = true; btn.textContent = 'Đang gửi...';
+
+  try {
+    const form = new URLSearchParams();
+    form.append('subject','Đơn hàng mới - Phở Gà Quán');
+    form.append('body',body);
+
+    const res = await fetch(ENDPOINT,{method:'POST',body:form});
+    const txt = await res.text();
+    if(res.ok && txt.trim()==='OK'){
+      localStorage.removeItem('cart_phoga'); localStorage.removeItem('cart');
+      alert('Đã gửi đơn thành công!');
+      window.location.href='index.html';
+    } else {
+      alert('Gửi thất bại: '+txt);
+    }
+  }catch(err){
+    alert('Lỗi kết nối: '+err);
+  }finally{
+    btn.disabled=false; btn.textContent=oldText;
+  }
+}
+
+document.addEventListener('DOMContentLoaded',()=>{
+  const btn = document.getElementById('submitBtn');
+  if(btn) btn.addEventListener('click', sendOrder);
+});
+</script>
+
 </body>
 </html>
